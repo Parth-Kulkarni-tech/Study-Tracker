@@ -5,7 +5,7 @@
 # Install dependencies with: python -m pip install -r requirements.txt
 # Configure deployment secrets in Streamlit Cloud → App settings → Secrets:
 # GEMINI_API_KEY = "your-key"
-# GEMINI_MODEL = "gemini-3.8-flash"
+# AI Study Buddy model is fixed to Gemini 3.5 Flash-Lite in this version.
 # MENTOR_CODE = "your-private-mentor-code"
 #
 # Keep real API keys and mentor codes out of this source file and GitHub.
@@ -1462,7 +1462,7 @@ body, [data-testid="stAppViewContainer"] {
   border-bottom: 1px solid rgba(190, 207, 214, .05);
 }
 [data-testid="stToolbar"] { right: 1rem; }
-.block-container, [data-testid="stMainBlockContainer"] { max-width: 1390px; padding-top: 5rem !important; padding-bottom: 4.5rem; }
+.block-container { max-width: 1390px; padding-top: 1.65rem; padding-bottom: 4.5rem; }
 #MainMenu, footer { visibility: hidden; }
 [data-testid="stAppViewContainer"] .main { position: relative; z-index: 1; }
 
@@ -2043,7 +2043,7 @@ hr { border-color:rgba(190,207,214,.1) !important; margin:1.35rem 0 !important; 
   @keyframes softReveal { from { opacity:.78; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 }
 @media (max-width: 800px) {
-   .block-container, [data-testid="stMainBlockContainer"] { padding-top:4.5rem !important; }
+  .block-container { padding-top:1rem; }
   .hero-shell { padding:1.45rem; }
   .orbit { opacity:.22; right:-32px; }
   .metric-value { font-size:1.55rem; }
@@ -2058,24 +2058,26 @@ hr { border-color:rgba(190,207,214,.1) !important; margin:1.35rem 0 !important; 
 .hero-dashboard .hero-quote { border: 0 !important; border-left: 0 !important; border-right: 0 !important; box-shadow: none !important; outline: none !important; }
 
 
-/* Dashboard composition inspired by the approved preview */
+/* Dashboard metric cards: text first, waveform in a dedicated footer lane. */
 .dashboard-stat-card {
-  position:relative; isolation:isolate; overflow:hidden;
-  /* Reserve a dedicated footer lane for the decorative waveform. */
-  min-height:164px; height:100%;
-  padding:1.05rem 1.15rem 2.25rem; border-radius:17px;
+  position:relative; display:flex; flex-direction:column; justify-content:flex-start;
+  min-height:178px; height:100%; min-width:0; overflow:hidden;
+  padding:1rem 1.1rem .72rem; border-radius:17px;
   border:1px solid rgba(190,207,214,.14);
   background:linear-gradient(145deg,rgba(16,24,29,.96),rgba(13,18,23,.98));
   box-shadow:0 10px 28px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.025);
   transition:transform .2s ease,border-color .2s ease,background .2s ease;
 }
 .dashboard-stat-card:hover { transform:translateY(-2px); border-color:rgba(105,214,197,.28); }
-.dashboard-stat-top { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:.6rem; }
-.dashboard-stat-label { color:#9aa8ad; font-size:.76rem; font-weight:500; letter-spacing:.005em; }
-.dashboard-stat-icon { width:37px; height:37px; display:flex; align-items:center; justify-content:center; border-radius:12px; font-size:1.2rem; }
-.dashboard-stat-value { position:relative; z-index:2; color:#f0f5f5; font:700 clamp(1.5rem,2.1vw,2rem) 'Manrope',sans-serif; letter-spacing:-.055em; margin:.42rem 0 .08rem; }
-.dashboard-stat-note { position:relative; z-index:2; display:block; max-width:100%; color:#839197; font-size:.72rem; line-height:1.4; }
-.dashboard-stat-wave { position:absolute; z-index:0; right:0; bottom:5px; width:48%; height:22px; opacity:.62; pointer-events:none; overflow:visible; }
+.dashboard-stat-content { position:relative; z-index:1; display:flex; flex-direction:column; flex:1 0 auto; min-width:0; }
+.dashboard-stat-top { display:flex; align-items:center; justify-content:space-between; gap:.6rem; min-height:37px; }
+.dashboard-stat-label { color:#9aa8ad; font-size:.76rem; font-weight:500; letter-spacing:.005em; line-height:1.35; }
+.dashboard-stat-icon { width:37px; height:37px; display:flex; align-items:center; justify-content:center; flex:0 0 37px; border-radius:12px; font-size:1.2rem; }
+.dashboard-stat-value { color:#f0f5f5; font:700 clamp(1.5rem,2.1vw,2rem) 'Manrope',sans-serif; letter-spacing:-.055em; line-height:1.12; margin:.48rem 0 .16rem; overflow-wrap:anywhere; }
+.dashboard-stat-note { display:block; max-width:100%; padding-bottom:.16rem; color:#839197; font-size:.72rem; line-height:1.42; overflow-wrap:anywhere; }
+/* This footer is in normal document flow: it can never sit on top of the label/value/note. */
+.dashboard-stat-wave-lane { position:relative; z-index:0; display:flex; align-items:flex-end; justify-content:flex-end; flex:0 0 15px; height:15px; min-height:15px; margin-top:.32rem; overflow:hidden; pointer-events:none; }
+.dashboard-stat-wave { display:block; position:static; width:47%; max-width:150px; height:14px; opacity:.56; overflow:hidden; }
 .stat-teal .dashboard-stat-icon { color:#53d8cb; background:rgba(57,202,188,.10); }
 .stat-teal .dashboard-stat-wave path { stroke:#39cbbb; }
 .stat-violet .dashboard-stat-icon { color:#b28bff; background:rgba(153,111,240,.12); }
@@ -2133,8 +2135,9 @@ hr { border-color:rgba(190,207,214,.1) !important; margin:1.35rem 0 !important; 
   .hero-dashboard { min-height:320px; }
   .hero-dashboard-inner { gap:1rem; }
   .hero-quote { text-align:left; margin:0; }
-  .dashboard-stat-card { min-height:154px; padding-bottom:2.1rem; }
-  .dashboard-stat-wave { width:44%; height:19px; bottom:5px; }
+  .dashboard-stat-card { min-height:176px; padding:.95rem .95rem .68rem; }
+  .dashboard-stat-wave-lane { flex-basis:13px; height:13px; min-height:13px; }
+  .dashboard-stat-wave { width:43%; height:12px; }
 }
 
 
@@ -2190,10 +2193,14 @@ def dashboard_metric_card(label: str, value: str, note: str, accent: str, icon: 
     accent_class = accent if accent in {"teal", "violet", "orange", "gold"} else "teal"
     st.markdown(
         f'''<div class="dashboard-stat-card stat-{accent_class}">
-          <div class="dashboard-stat-top"><div class="dashboard-stat-label">{safe_label}</div><div class="dashboard-stat-icon">{icon}</div></div>
-          <div class="dashboard-stat-value">{safe_value}</div>
-          <div class="dashboard-stat-note">{safe_note}</div>
-          <svg class="dashboard-stat-wave" viewBox="0 0 180 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C16 30 16 20 30 24 S48 36 62 22 S80 7 92 22 S112 34 124 19 S145 9 155 20 S169 27 180 12" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg>
+          <div class="dashboard-stat-content">
+            <div class="dashboard-stat-top"><div class="dashboard-stat-label">{safe_label}</div><div class="dashboard-stat-icon">{icon}</div></div>
+            <div class="dashboard-stat-value">{safe_value}</div>
+            <div class="dashboard-stat-note">{safe_note}</div>
+          </div>
+          <div class="dashboard-stat-wave-lane" aria-hidden="true">
+            <svg class="dashboard-stat-wave" viewBox="0 0 180 40" preserveAspectRatio="none"><path d="M0 30 C16 30 16 20 30 24 S48 36 62 22 S80 7 92 22 S112 34 124 19 S145 9 155 20 S169 27 180 12" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg>
+          </div>
         </div>''',
         unsafe_allow_html=True,
     )
@@ -3238,6 +3245,109 @@ def _app_secret(name: str, default: str = "") -> str:
         return str(env_default or "").strip()
 
 
+
+def _gemini_error_status(exc: Exception) -> int | None:
+    """Best-effort extraction of the HTTP/API status from google-genai errors."""
+    for attr in ("code", "status_code", "http_status"):
+        value = getattr(exc, attr, None)
+        try:
+            if value is not None:
+                return int(value)
+        except (TypeError, ValueError):
+            pass
+    response = getattr(exc, "response", None)
+    for attr in ("status_code", "status"):
+        value = getattr(response, attr, None) if response is not None else None
+        try:
+            if value is not None:
+                return int(value)
+        except (TypeError, ValueError):
+            pass
+    message = str(exc).lower()
+    for code in (503, 502, 504, 500, 429, 408):
+        if str(code) in message:
+            return code
+    return None
+
+
+def _gemini_is_retryable(exc: Exception) -> bool:
+    """Retry transient overload/server/network failures, not invalid keys or hard quota exhaustion."""
+    status = _gemini_error_status(exc)
+    message = str(exc).lower()
+    if status in (500, 502, 503, 504, 408):
+        return True
+    if status == 429:
+        # Retry transient rate limiting, but do not retry an exhausted daily/project quota.
+        hard_quota_phrases = (
+            "quota exceeded", "daily limit", "per day", "billing", "exceeded your current quota",
+            "limit: 0", "free_tier_requests"
+        )
+        return not any(phrase in message for phrase in hard_quota_phrases)
+    transient_terms = (
+        "timed out", "timeout", "temporarily unavailable", "connection reset",
+        "connection aborted", "service unavailable", "high demand", "overloaded"
+    )
+    return any(term in message for term in transient_terms)
+
+
+def _call_gemini(
+    prompt: str,
+    api_key: str,
+    model: str = "gemini-3.5-flash-lite",
+    max_attempts: int = 3,
+) -> tuple[str, str]:
+    """Call Gemini 3.5 Flash-Lite with bounded retries for temporary overloads."""
+    if not api_key:
+        raise RuntimeError("Gemini API key is missing. Add GEMINI_API_KEY to Streamlit Secrets.")
+
+    from google import genai
+
+    client = genai.Client(api_key=api_key)
+    last_error: Exception | None = None
+
+    for attempt in range(max_attempts):
+        try:
+            response = client.models.generate_content(model=model, contents=prompt)
+            answer = (getattr(response, "text", None) or "").strip()
+            if not answer:
+                raise RuntimeError("Gemini returned an empty response. Please try rephrasing your question.")
+            return answer, model
+        except Exception as exc:
+            last_error = exc
+            if attempt < max_attempts - 1 and _gemini_is_retryable(exc):
+                # 2s, then 4s: enough for short service spikes without leaving the user waiting too long.
+                time.sleep(2 ** (attempt + 1))
+                continue
+            break
+
+    if last_error is None:
+        raise RuntimeError("Gemini did not return a response.")
+
+    status = _gemini_error_status(last_error)
+    message = str(last_error) or last_error.__class__.__name__
+    if status == 503 or "high demand" in message.lower() or "overloaded" in message.lower():
+        raise RuntimeError(
+            "Gemini 3.5 Flash-Lite is temporarily overloaded (503). I retried automatically; "
+            "please wait a minute and send your question again."
+        ) from last_error
+    if status == 429:
+        raise RuntimeError(
+            "Gemini API rate limit or quota reached (429). Wait for the limit to reset, "
+            "or check your Gemini API usage and billing/quota settings."
+        ) from last_error
+    if status in (500, 502, 504, 408):
+        raise RuntimeError(
+            f"Gemini had a temporary server/network error ({status}). Automatic retries were attempted; please try again shortly."
+        ) from last_error
+    raise RuntimeError(message[:500]) from last_error
+
+
+def _generate_study_buddy_answer(prompt: str, gemini_key: str, gemini_model: str) -> tuple[str, str]:
+    """Generate Study Buddy responses using the configured Google Gemini model."""
+    answer, actual_model = _call_gemini(prompt, gemini_key, gemini_model)
+    return answer, f"Google Gemini · {actual_model}"
+
+
 def _ai_study_context(user: dict[str, Any]) -> str:
     """Build a compact, non-identifying study context for Gemini."""
     uid = uid_of(user)
@@ -3320,8 +3430,10 @@ def page_ai_study_buddy(user: dict[str, Any]) -> None:
         "Learn any subject — science, maths, languages, humanities, business, programming, arts, engineering, or anything you're curious about.",
     )
 
-    api_key = _app_secret("GEMINI_API_KEY")
-    model_name = _app_secret("GEMINI_MODEL", "gemini-3.8-flash") or "gemini-3.8-flash"
+    gemini_key = _app_secret("GEMINI_API_KEY")
+    gemini_model = "gemini-3.5-flash-lite"
+    primary_provider = "GOOGLE GEMINI" if gemini_key else "NOT CONNECTED"
+    primary_model = gemini_model
     messages_key = f"studytracker_ai_messages_{uid}"
     library_key = f"studytracker_ai_library_{uid}"
     input_key = f"studytracker_ai_input_{uid}"
@@ -3335,7 +3447,7 @@ def page_ai_study_buddy(user: dict[str, Any]) -> None:
         st.session_state[library_key] = []
 
     st.markdown(f'''<div class="ai-hud">
-      <div class="hero-kicker"><span class="pulse-dot"></span> GEMINI · ALL SUBJECTS</div>
+      <div class="hero-kicker"><span class="pulse-dot"></span> AI STUDY BUDDY · ALL SUBJECTS</div>
       <div class="ai-hud-title">A clearer way to learn anything.</div>
       <div class="ai-hud-sub">Turn any topic into a clear explanation, an adaptive quiz, flashcards, a mock test, a study plan, or a polished set of notes. Choose a learning mode, enter your subject, and open a learning session.</div>
       <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem"><span class="pill">TUTOR</span><span class="pill">QUIZZES</span><span class="pill">FLASHCARDS</span><span class="pill">NOTE SUMMARIES</span><span class="pill">MOCK TESTS</span></div>
@@ -3343,21 +3455,22 @@ def page_ai_study_buddy(user: dict[str, Any]) -> None:
     st.write("")
 
     a, b, c = st.columns(3, gap="medium")
-    with a: mini_card("AI ASSISTANT", "GEMINI", "Universal subject support", "violet")
-    with b: mini_card("GEMINI MODEL", model_name.upper(), "Configurable through Secrets", "cyan")
+    with a: mini_card("AI ASSISTANT", primary_provider, "Universal subject support", "violet")
+    with b: mini_card("AI MODEL", primary_model.upper(), "Google Gemini · Flash-Lite", "cyan")
     with c: mini_card("RESOURCE VAULT", str(len(st.session_state[library_key])), "Saved this browser session", "mint")
 
-    if not api_key:
-        st.warning("Gemini is not connected yet. Add your key in Streamlit Cloud → app Settings → Secrets.")
-        st.code('GEMINI_API_KEY = "paste-your-key-here"\nGEMINI_MODEL = "gemini-3.8-flash"', language="toml")
+    if not gemini_key:
+        st.warning("Gemini is not connected yet. Add your Google AI Studio API key in Streamlit Cloud → App settings → Secrets.")
+        st.code('GEMINI_API_KEY = "paste-your-gemini-key-here"\nGEMINI_MODEL = "gemini-3.5-flash-lite"', language="toml")
         st.link_button("Create a Gemini API key", "https://aistudio.google.com/apikey", use_container_width=True)
-        st.caption("Keep the key in Secrets or environment variables—never in main.py or a public GitHub commit.")
+        st.caption("Keep your key in Streamlit Secrets or environment variables—never in main.py or GitHub.")
         return
 
-    with st.expander("Privacy + study data controls", expanded=not st.session_state.get(f"studytracker_ai_consent_{uid}", False)):
-        st.info("When you send a prompt, the prompt and any notes you attach are sent to Google Gemini. If enabled below, a compact, non-identifying summary of study progress is also included. Avoid passwords, personal identifiers, confidential class data, or anything you do not want processed by Google. Review Google's current API data terms before use.")
-        consent_key = f"studytracker_ai_consent_{uid}"
-        consent = st.checkbox("I understand that prompts and selected study context are sent to Google Gemini.", key=consent_key)
+    provider_summary = "Google Gemini 3.5 Flash-Lite"
+    consent_key = f"studytracker_ai_consent_v2_{uid}"
+    with st.expander("Privacy + study data controls", expanded=not st.session_state.get(consent_key, False)):
+        st.info(f"Your prompt and any notes you attach are sent to {provider_summary}. If enabled below, a compact, non-identifying summary of your study progress is also included. Avoid passwords, personal identifiers, confidential class data, or information you do not want processed by Google. Review Google's current Gemini API data terms before use.")
+        consent = st.checkbox("I understand that my prompts and selected study context are sent to Google Gemini.", key=consent_key)
         use_study_context = st.toggle("Personalize with my aggregate study progress", value=True, key=f"studytracker_ai_personalize_{uid}")
     if not consent:
         st.caption("Confirm the privacy note to enable the AI learning tools.")
@@ -3492,27 +3605,44 @@ Conversation so far (most recent 10 messages):
             conversation = "\n\n".join(f"{m['role'].upper()}: {m['content']}" for m in chat_history[-10:])
             full_prompt = system_prompt + conversation + "\n\nASSISTANT:"
             try:
-                from google import genai
-                client = genai.Client(api_key=api_key)
                 with st.chat_message("assistant"):
-                    with st.spinner("Preparing your response…"):
-                        response = client.models.generate_content(model=model_name, contents=full_prompt)
-                    answer = (getattr(response, "text", None) or "I couldn't produce a text answer this time. Please try rephrasing your question.").strip()
+                    with st.spinner("Gemini 3.5 Flash-Lite is preparing your response…"):
+                        answer, provider_used = _generate_study_buddy_answer(
+                            full_prompt,
+                            gemini_key=gemini_key,
+                            gemini_model=gemini_model,
+                        )
                     st.markdown(answer)
-                chat_history.append({"role": "assistant", "content": answer, "subject": subject, "topic": topic, "mode": mode, "timestamp": dt.datetime.now().isoformat(timespec="seconds")})
+                    st.caption(f"Answered using {provider_used}")
+                chat_history.append({"role": "assistant", "content": answer, "subject": subject, "topic": topic, "mode": mode, "provider": provider_used, "timestamp": dt.datetime.now().isoformat(timespec="seconds")})
             except Exception as exc:
-                diagnostic = (str(exc) or exc.__class__.__name__).replace(api_key, "[hidden]")[:500]
+                diagnostic = str(exc) or exc.__class__.__name__
+                if gemini_key:
+                    diagnostic = diagnostic.replace(gemini_key, "[hidden]")
+                diagnostic = diagnostic[:600]
                 with st.chat_message("assistant"):
-                    st.error("Gemini couldn't respond. Check your API key, model availability, network connection, and current quota.")
+                    if "temporarily overloaded" in diagnostic.lower() or "503" in diagnostic:
+                        st.warning("Gemini is experiencing high demand. The app already retried automatically; wait about a minute and try again.")
+                    elif "rate limit" in diagnostic.lower() or "quota" in diagnostic.lower() or "429" in diagnostic:
+                        st.warning("Gemini's request limit or quota has been reached. Check your Google AI Studio usage and try again after the limit resets.")
+                    else:
+                        st.error("Gemini couldn't complete the request. Check the diagnostic below and your API configuration.")
                     st.caption(f"Diagnostic: {diagnostic}")
-                chat_history.append({"role": "assistant", "content": "Gemini couldn't respond. Check the API key, model availability, network connection, and quota, then try again."})
+                chat_history.append({"role": "assistant", "content": "Gemini could not complete the request. Check the diagnostic above, then try again."})
     else:
         st.chat_input("Confirm the privacy note above to start chatting", disabled=True, key=f"studytracker_ai_disabled_chat_{uid}")
 
-    assistant_messages = [m for m in chat_history if m.get("role") == "assistant" and not str(m.get("content", "")).startswith("Gemini couldn't respond")]
+    assistant_messages = [
+        m for m in chat_history
+        if m.get("role") == "assistant"
+        and not str(m.get("content", "")).startswith((
+            "The configured AI providers couldn\'t respond",
+            "Gemini could not complete the request."
+        ))
+    ]
     st.divider()
     st.markdown("#### Knowledge vault")
-    st.caption("Save useful Gemini outputs as revision resources for this browser session, or export them as Markdown. For long-term persistence, use a database in a later deployment.")
+    st.caption("Save useful AI outputs as revision resources for this browser session, or export them as Markdown. For long-term persistence, use a database in a later deployment.")
     library = st.session_state[library_key]
     lib_left, lib_right = st.columns([1, 2], gap="medium")
     with lib_left:
@@ -3533,7 +3663,7 @@ Conversation so far (most recent 10 messages):
                     st.markdown(item["content"])
                     st.download_button("Download this resource", data=item["content"].encode("utf-8"), file_name=f"study_resource_{len(library)-idx}.md", mime="text/markdown", key=f"studytracker_ai_item_{uid}_{idx}")
         else:
-            st.markdown('<div class="panel"><b>Your vault is waiting for its first discovery.</b><p style="color:#89969b">When Gemini produces a useful explanation or set of flashcards, save it here and download it for revision.</p></div>', unsafe_allow_html=True)
+            st.markdown('<div class="panel"><b>Your vault is waiting for its first discovery.</b><p style="color:#89969b">When your AI Study Buddy produces a useful explanation or set of flashcards, save it here and download it for revision.</p></div>', unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # Profile, settings and mentor console
