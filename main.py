@@ -1462,7 +1462,7 @@ body, [data-testid="stAppViewContainer"] {
   border-bottom: 1px solid rgba(190, 207, 214, .05);
 }
 [data-testid="stToolbar"] { right: 1rem; }
-.block-container { max-width: 1390px; padding-top: 1.65rem; padding-bottom: 4.5rem; }
+.block-container, [data-testid="stMainBlockContainer"] { max-width: 1390px; padding-top: 5rem !important; padding-bottom: 4.5rem; }
 #MainMenu, footer { visibility: hidden; }
 [data-testid="stAppViewContainer"] .main { position: relative; z-index: 1; }
 
@@ -2043,7 +2043,7 @@ hr { border-color:rgba(190,207,214,.1) !important; margin:1.35rem 0 !important; 
   @keyframes softReveal { from { opacity:.78; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 }
 @media (max-width: 800px) {
-  .block-container { padding-top:1rem; }
+    .block-container, [data-testid="stMainBlockContainer"] { padding-top:4.5rem !important; }
   .hero-shell { padding:1.45rem; }
   .orbit { opacity:.22; right:-32px; }
   .metric-value { font-size:1.55rem; }
